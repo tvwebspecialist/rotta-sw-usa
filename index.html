@@ -642,7 +642,6 @@ async function initStore(){
   }catch(e){}
   boot();
 }
-if(window.claude&&claude.use) initStore(); else boot();
 
 /* =========================================================================
    APP
@@ -1136,6 +1135,9 @@ function subscribe(){
     ? "Lista sincronizzata: le modifiche arrivano a tutti i viaggiatori."
     : "Salvataggio su questo dispositivo. Online la lista si sincronizza tra tutti.";
 }
+
+/* bootstrap — dopo che tutte le dichiarazioni sono inizializzate */
+if(window.claude && typeof claude.use === "function") initStore(); else boot();
 
 if("serviceWorker" in navigator){
   addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
