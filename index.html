@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ece9e2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17130f" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Rotta SW USA">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>Rotta Sud-Ovest USA</title>
+<meta name="description" content="Compagno di viaggio interattivo per il tour on-the-road Venezia · San Francisco · canyon · Los Angeles, 16 maggio – 1 giugno 2027.">
+<style>html,body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --paper:#ece9e2; --surface:#f7f5f0; --surface-2:#f1eee7;
+  --ink:#241f1a; --ink-soft:#5f584e; --ink-faint:#8a8275;
+  --line:#d9d4c7; --line-strong:#c6bfae;
+  --sky:#1f6f7a; --sky-deep:#12525b; --sky-wash:#e2edee;
+  --rust:#bd4b26; --rust-wash:#f5e4dc;
+  --sage:#6c7245; --gold:#bd852c;
+  --shadow:0 1px 2px rgba(40,32,22,.06), 0 6px 20px rgba(40,32,22,.07);
+  --tap:52px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#17130f; --surface:#221c17; --surface-2:#2b241d;
+    --ink:#f1ece3; --ink-soft:#b3a99b; --ink-faint:#8b8073;
+    --line:#372f27; --line-strong:#483e33;
+    --sky:#57b7c3; --sky-deep:#8ad3dc; --sky-wash:#12302f;
+    --rust:#e06d43; --rust-wash:#3a241b;
+    --sage:#a9af7a; --gold:#e0a44f;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#17130f; --surface:#221c17; --surface-2:#2b241d;
+  --ink:#f1ece3; --ink-soft:#b3a99b; --ink-faint:#8b8073;
+  --line:#372f27; --line-strong:#483e33;
+  --sky:#57b7c3; --sky-deep:#8ad3dc; --sky-wash:#12302f;
+  --rust:#e06d43; --rust-wash:#3a241b;
+  --sage:#a9af7a; --gold:#e0a44f;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Figtree",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:17px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:none}
+a{color:var(--sky-deep)}
+:focus-visible{outline:3px solid var(--sky);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- shell ---------- */
+#app{
+  max-width:520px;margin:0 auto;min-height:100%;
+  background:var(--paper);
+  display:flex;flex-direction:column;
+  box-shadow:0 0 60px rgba(40,32,22,.10);
+}
+#topbar{
+  position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+  padding:14px 18px 12px;
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+}
+#topbar .brand{
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
+  font-size:19px;letter-spacing:-.01em;line-height:1;
+}
+#topbar .ctx{font-size:13px;color:var(--ink-faint);white-space:nowrap}
+main{flex:1;padding:18px 18px 118px}
+section[hidden]{display:none}
+
+h2.tab-h{
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
+  font-size:26px;letter-spacing:-.02em;text-wrap:balance;margin-bottom:2px;
+}
+p.tab-sub{color:var(--ink-soft);font-size:14.5px;margin-bottom:18px}
+
+/* ---------- bottom nav ---------- */
+#tabbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  max-width:520px;margin:0 auto;
+  background:color-mix(in srgb,var(--surface) 92%,transparent);
+  backdrop-filter:blur(12px);
+  border-top:1px solid var(--line-strong);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+}
+#tabbar button{
+  min-height:var(--tap);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--ink-faint);font-size:11.5px;font-weight:600;letter-spacing:.01em;
+  border-radius:12px;transition:color .15s,background .15s;
+}
+#tabbar button svg{width:24px;height:24px;stroke-width:1.9}
+#tabbar button[aria-selected="true"]{color:var(--sky-deep);background:var(--sky-wash)}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;padding:16px;box-shadow:var(--shadow);
+}
+.stack{display:flex;flex-direction:column;gap:14px}
+.eyebrow{
+  font-size:11.5px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;
+  color:var(--ink-faint);
+}
+
+/* ---------- hero banner ---------- */
+.hero{
+  border-radius:18px;overflow:hidden;border:1px solid var(--line);
+  box-shadow:var(--shadow);background:var(--sky-wash);
+}
+.hero svg{display:block;width:100%;height:auto}
+
+/* ---------- countdown ---------- */
+.count{
+  text-align:center;padding:22px 16px;
+}
+.count .num{
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
+  font-size:68px;line-height:.95;letter-spacing:-.03em;color:var(--rust);
+  font-variant-numeric:tabular-nums;
+}
+.count .lbl{font-size:14px;color:var(--ink-soft);margin-top:6px}
+.count .when{font-size:13px;color:var(--ink-faint);margin-top:10px}
+
+/* ---------- stat row ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+  border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.stats div{background:var(--surface);padding:12px 6px;text-align:center}
+.stats .s-n{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:19px}
+.stats .s-l{font-size:11px;color:var(--ink-faint);margin-top:2px}
+
+/* ---------- timeline ---------- */
+.tl{position:relative;padding-left:38px}
+.tl::before{content:"";position:absolute;left:15px;top:8px;bottom:8px;width:2px;background:var(--line-strong)}
+.stop-row{
+  position:relative;width:100%;text-align:left;
+  padding:14px 12px 14px 0;display:block;
+}
+.stop-row + .stop-row{border-top:1px solid var(--line)}
+.stop-row .dot{
+  position:absolute;left:-31px;top:16px;width:30px;height:30px;border-radius:50%;
+  background:var(--surface);border:2px solid var(--sky);
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:13px;color:var(--sky-deep);
+}
+.stop-row[data-live="1"] .dot{background:var(--rust);border-color:var(--rust);color:#fff}
+.stop-row .city{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:18px;letter-spacing:-.01em}
+.stop-row .meta{font-size:13.5px;color:var(--ink-soft);margin-top:2px}
+.stop-row .hotel{font-size:13px;color:var(--ink-faint);margin-top:3px;display:flex;gap:6px;align-items:center}
+.chev{position:absolute;right:2px;top:50%;transform:translateY(-50%);color:var(--ink-faint)}
+.leg{
+  display:flex;gap:8px;align-items:center;
+  font-size:12.5px;color:var(--ink-faint);
+  padding:6px 0 6px 2px;margin-left:2px;
+}
+.leg svg{width:15px;height:15px;flex:none}
+.leg.fly{color:var(--rust)}
+
+/* ---------- pills ---------- */
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--ink-soft);
+}
+.pill.sky{background:var(--sky-wash);border-color:transparent;color:var(--sky-deep)}
+.pill.rust{background:var(--rust-wash);border-color:transparent;color:var(--rust)}
+.pill.sage{background:color-mix(in srgb,var(--sage) 16%,var(--surface));border-color:transparent;color:var(--sage)}
+.stars{color:var(--gold);letter-spacing:1px;font-size:13px}
+
+/* ---------- sheet ---------- */
+#sheet{
+  position:fixed;inset:0;z-index:50;display:none;
+}
+#sheet[data-open]{display:block}
+#sheet .backdrop{position:absolute;inset:0;background:rgba(20,14,8,.45)}
+#sheet .panel{
+  position:absolute;left:0;right:0;bottom:0;top:0;
+  max-width:520px;margin:0 auto;background:var(--paper);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  animation:rise .22s ease;
+}
+@keyframes rise{from{transform:translateY(14px);opacity:.6}to{transform:none;opacity:1}}
+#sheet .sheet-top{
+  position:sticky;top:0;background:color-mix(in srgb,var(--paper) 90%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;padding:10px 14px;z-index:2;
+}
+#sheet .sheet-top button{
+  min-height:44px;min-width:44px;display:flex;align-items:center;gap:6px;
+  font-weight:600;color:var(--sky-deep);
+}
+#sheet .sheet-body{padding:18px 18px 60px}
+.sheet-hero{
+  border-radius:16px;padding:20px 16px;color:#fff;overflow:hidden;position:relative;
+  background:linear-gradient(135deg,var(--sky-deep),var(--sky));
+}
+.sheet-hero .n{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:13px;opacity:.85;letter-spacing:.06em}
+.sheet-hero h3{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:27px;letter-spacing:-.02em;margin-top:4px;text-wrap:balance}
+.sheet-hero .dr{margin-top:8px;font-size:13.5px;opacity:.92}
+
+.read{font-family:"Newsreader",Georgia,serif;font-size:16.5px;line-height:1.62;color:var(--ink-soft)}
+.field{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-bottom:1px solid var(--line)}
+.field .k{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+.field .v{font-size:15px}
+
+.poi{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  min-height:var(--tap);padding:8px 4px;border-bottom:1px solid var(--line);
+}
+.poi .box{
+  width:26px;height:26px;flex:none;border-radius:8px;border:2px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;color:#fff;transition:.12s;
+}
+.poi[aria-pressed="true"] .box{background:var(--sage);border-color:var(--sage)}
+.poi .box svg{width:16px;height:16px;opacity:0;transition:.12s}
+.poi[aria-pressed="true"] .box svg{opacity:1}
+.poi .t{font-size:15px}
+.poi[aria-pressed="true"] .t{color:var(--ink-faint)}
+
+textarea{
+  width:100%;font:inherit;font-size:15px;color:var(--ink);
+  background:var(--surface-2);border:1px solid var(--line);border-radius:12px;
+  padding:12px;resize:vertical;min-height:88px;
+}
+
+/* ---------- map ---------- */
+#map-wrap{border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--surface)}
+#map-wrap svg{display:block;width:100%;height:auto;touch-action:pan-y}
+.map-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-soft);margin-top:12px}
+.map-legend span{display:flex;align-items:center;gap:6px}
+.lg-line{width:20px;height:0;border-top:3px solid var(--sky)}
+.lg-fly{width:20px;height:0;border-top:3px dashed var(--rust)}
+
+/* ---------- checklist ---------- */
+.progress{height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}
+.progress i{display:block;height:100%;background:var(--sage);transition:width .3s}
+.grp-h{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:15px;margin:18px 0 2px;
+  display:flex;justify-content:space-between;align-items:baseline}
+.grp-h .c{font-size:12px;color:var(--ink-faint);font-family:"Figtree",sans-serif}
+.add-row{display:flex;gap:8px;margin-top:14px}
+.add-row input{
+  flex:1;font:inherit;font-size:15px;padding:12px;border-radius:12px;
+  border:1px solid var(--line);background:var(--surface-2);color:var(--ink);
+}
+.btn{
+  min-height:var(--tap);padding:0 18px;border-radius:12px;font-weight:700;
+  background:var(--sky);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid var(--sky-deep);
+}
+.btn.ghost{background:transparent;color:var(--sky-deep);border-color:var(--line-strong)}
+.btn.sm{min-height:40px;padding:0 12px;font-size:13px}
+.del{color:var(--ink-faint);min-height:40px;min-width:40px;display:flex;align-items:center;justify-content:center}
+
+/* ---------- info / accordion ---------- */
+.acc{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+.acc + .acc{margin-top:10px}
+.acc > summary{
+  list-style:none;padding:15px 16px;font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:16px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;
+}
+.acc > summary::-webkit-details-marker{display:none}
+.acc > summary .mk{color:var(--ink-faint);transition:transform .2s}
+.acc[open] > summary .mk{transform:rotate(45deg)}
+.acc .acc-body{padding:0 16px 16px}
+
+.flt{border-left:2px solid var(--sky);padding:4px 0 4px 12px;margin:10px 0}
+.flt .carrier{font-weight:700;font-size:13px}
+.flt .rowf{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink-soft);margin-top:2px;font-variant-numeric:tabular-nums}
+
+.kv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.kv:last-child{border-bottom:none}
+.kv .kk{color:var(--ink-faint)}
+.kv .vv{text-align:right;font-weight:600}
+
+.budget-big{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:34px;letter-spacing:-.02em;color:var(--sky-deep)}
+.exp-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.exp-row .who{font-weight:700;min-width:0;flex:none;max-width:34%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exp-row .lab{flex:1;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exp-row .amt{font-variant-numeric:tabular-nums;font-weight:700}
+.exp-form{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.exp-form input{font:inherit;font-size:15px;padding:11px;border-radius:11px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);min-width:0}
+.exp-form .btn{grid-column:1/-1}
+.bal{display:flex;justify-content:space-between;padding:7px 0;font-size:13.5px;border-bottom:1px dashed var(--line)}
+.bal .pos{color:var(--sage);font-weight:700}
+.bal .neg{color:var(--rust);font-weight:700}
+
+.note-line{font-size:12px;color:var(--ink-faint);margin-top:14px;text-align:center;line-height:1.5}
+.tag-src{display:inline-block;margin-top:2px}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header id="topbar">
+    <span class="brand">Rotta Sud-Ovest</span>
+    <span class="ctx" id="ctx">—</span>
+  </header>
+
+  <main>
+    <!-- OGGI -->
+    <section data-tab="oggi">
+      <div class="hero" aria-hidden="true">
+        <svg viewBox="0 0 520 150" role="img">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#e9b678"/><stop offset="1" stop-color="#d98a5a"/>
+            </linearGradient>
+          </defs>
+          <rect width="520" height="150" fill="url(#sky)"/>
+          <circle cx="392" cy="58" r="24" fill="#f4ddb0"/>
+          <path d="M0 150 V96 h70 l14-22 h40 l10 22 h120 V70 h56 l16 -26 h30 l14 26 h54 v18 h56 l18 -14 h34 V150Z" fill="#b5623b" opacity=".92"/>
+          <path d="M0 150 V120 h96 l18 -16 h44 l14 16 h150 V104 h60 l14 12 h74 V150Z" fill="#8f4529"/>
+        </svg>
+      </div>
+
+      <div class="stack" style="margin-top:16px">
+        <div class="card count" id="countCard"></div>
+        <div class="stats" id="tripStats"></div>
+        <div class="card" id="todayNext"></div>
+        <div class="card" id="prepCard"></div>
+      </div>
+    </section>
+
+    <!-- VIAGGIO -->
+    <section data-tab="viaggio" hidden>
+      <h2 class="tab-h">Il viaggio</h2>
+      <p class="tab-sub">13 tappe · 15 notti · Venezia → Los Angeles. Tocca una tappa per i dettagli.</p>
+      <div class="tl" id="timeline"></div>
+    </section>
+
+    <!-- MAPPA -->
+    <section data-tab="mappa" hidden>
+      <h2 class="tab-h">La mappa</h2>
+      <p class="tab-sub">Il percorso attraverso California, Nevada, Utah e Arizona. Tocca un numero.</p>
+      <div id="map-wrap"></div>
+      <div class="map-legend">
+        <span><span class="lg-line"></span> Tratta in auto</span>
+        <span><span class="lg-fly"></span> Volo interno (23 mag)</span>
+      </div>
+      <p class="note-line">Distanze indicative: ≈ 3.000 km in auto complessivi, più un volo Cedar City → Moab.</p>
+    </section>
+
+    <!-- VALIGIA -->
+    <section data-tab="valigia" hidden>
+      <h2 class="tab-h">La valigia</h2>
+      <p class="tab-sub">Lista condivisa: le spunte si aggiornano per tutti.</p>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span class="eyebrow">Pronti al <span id="pkPct">0</span>%</span>
+          <span style="font-size:12px;color:var(--ink-faint)" id="pkCount"></span>
+        </div>
+        <div class="progress"><i id="pkBar" style="width:0%"></i></div>
+      </div>
+      <div id="checklist"></div>
+      <div class="add-row">
+        <input id="pkNew" placeholder="Aggiungi una cosa…" aria-label="Nuovo oggetto da mettere in valigia">
+        <button class="btn" id="pkAdd">Aggiungi</button>
+      </div>
+      <p class="note-line" id="pkMode"></p>
+    </section>
+
+    <!-- INFO -->
+    <section data-tab="info" hidden>
+      <h2 class="tab-h">Info utili</h2>
+      <p class="tab-sub">Voli, auto, budget e documenti — tutto in un posto.</p>
+      <div id="infoAcc"></div>
+    </section>
+  </main>
+
+  <nav id="tabbar" role="tablist" aria-label="Sezioni">
+    <button role="tab" aria-selected="true" data-go="oggi" aria-label="Oggi">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Oggi</button>
+    <button role="tab" aria-selected="false" data-go="viaggio" aria-label="Viaggio">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="4" cy="6" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.4" fill="currentColor" stroke="none"/></svg>Viaggio</button>
+    <button role="tab" aria-selected="false" data-go="mappa" aria-label="Mappa">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg>Mappa</button>
+    <button role="tab" aria-selected="false" data-go="valigia" aria-label="Valigia">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>Valigia</button>
+    <button role="tab" aria-selected="false" data-go="info" aria-label="Info">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>Info</button>
+  </nav>
+</div>
+
+<div id="sheet" aria-hidden="true">
+  <div class="backdrop" data-close></div>
+  <div class="panel" role="dialog" aria-modal="true" aria-label="Dettaglio tappa">
+    <div class="sheet-top">
+      <button data-close aria-label="Chiudi">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>Indietro
+      </button>
+    </div>
+    <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   DATI DEL VIAGGIO  —  Ref 61964459 · Listrop Viaggi e Turismo
+   ========================================================================= */
+const TRIP = {
+  meta:{
+    ref:"61964459", operator:"Listrop Viaggi e Turismo",
+    addr:"Via Cap. Alessio 96/b, Rosà", tel:"+39 0424 584970",
+    emergency:"+39 02 39864425", whatsapp:"+39 333 571 6035",
+    email:"individuali@listrop.com", created:"25 ago 2026",
+    pax:"4 adulti", dates:"16 maggio – 1 giugno 2027",
+    nights:15, kmCar:3000, startISO:"2027-05-16", endISO:"2027-06-01",
+    priceTotal:11668, pricePer:2917
+  },
+  stops:[
+    {id:"s1",n:1,city:"San Francisco",region:"California",
+     inISO:"2027-05-16",outISO:"2027-05-18",in:"16 mag",out:"18 mag",nights:2,pin:{x:96,y:170},
+     hotel:{name:"Hotel Caza Fisherman's Wharf",addr:"1300 Columbus Avenue",stars:4,pop:86,board:"Solo pernottamento",room:"Deluxe Room, letto king (accessibile)"},
+     weather:{hi:18,lo:11,note:"Fresco e ventoso, nebbia costiera al mattino."},
+     blurb:"Città viva e cosmopolita sulla baia: dai tram storici al Financial District. Un giro in barca è il modo migliore per vederla; imperdibili Fisherman's Wharf, il Golden Gate e l'escursione ad Alcatraz. Chinatown, le Painted Ladies e la Transamerica Pyramid completano il quadro.",
+     pois:["Golden Gate Bridge","Alcatraz Island","Fisherman's Wharf & Pier 39","Lombard Street","Painted Ladies (Alamo Square)","Coit Tower","Palace of Fine Arts","Chinatown","Twin Peaks","California Academy of Sciences","Ghirardelli Square","Muir Woods"],
+     extra:"Transfer privato in minivan da SFO all'hotel (arrivo volo 17:40, attesa max 60 min). Ritiro auto il 18 mag alle 10:00, in O'Farrell Street.",
+     toNext:{mode:"car",km:320,drive:"~4 h",note:"Via CA-120. Il passo Tioga di solito è ancora chiuso a maggio."}},
+
+    {id:"s2",n:2,city:"Parco nazionale di Yosemite",region:"California",
+     inISO:"2027-05-18",outISO:"2027-05-19",in:"18 mag",out:"19 mag",nights:1,pin:{x:256,y:186},
+     hotel:{name:"Cedar Lodge",addr:"9966 Highway 140, El Portal",stars:2,pop:74,board:"Solo pernottamento",room:"Camera doppia, 2 letti"},
+     weather:{hi:21,lo:4,note:"Valle mite di giorno, notti fredde. Cascate al massimo per lo scioglimento delle nevi."},
+     blurb:"Tra i tesori naturali più iconici degli USA: pareti di granito, cascate e sequoie giganti. El Capitan e Half Dome dominano la Yosemite Valley; da Tunnel View si abbracciano El Capitan, Bridalveil Fall e Half Dome in un solo colpo d'occhio, soprattutto all'alba o al tramonto.",
+     pois:["Tunnel View","El Capitan","Half Dome","Yosemite Falls","Bridalveil Fall","Mirror Lake","Mist Trail (Vernal & Nevada Falls)","Glacier Point"],
+     toNext:{mode:"car",km:300,drive:"~4 h",note:"Verso valle lungo la CA-140, poi CA-99 per Fresno."}},
+
+    {id:"s3",n:3,city:"Bakersfield",region:"California",
+     inISO:"2027-05-19",outISO:"2027-05-20",in:"19 mag",out:"20 mag",nights:1,pin:{x:302,y:469},
+     hotel:{name:"Holiday Inn Express & Suites Bakersfield Central (IHG)",addr:"3001 Buck Owens Blvd",stars:2,pop:90,board:"Con colazione",room:"1 King Suite"},
+     weather:{hi:30,lo:15,note:"Caldo secco di pianura."},
+     blurb:"Capoluogo della contea di Kern, capitale californiana del petrolio e cuore di un'area agricola tra le più produttive al mondo. Tappa di passaggio comoda per spezzare la strada verso il deserto del Mojave.",
+     pois:["Kern County Museum","Buck Owens' Crystal Palace","Centro storico"],
+     toNext:{mode:"car",km:460,drive:"~4 h 15",note:"Via CA-58 e I-15 attraverso Barstow."}},
+
+    {id:"s4",n:4,city:"Las Vegas",region:"Nevada",
+     inISO:"2027-05-20",outISO:"2027-05-21",in:"20 mag",out:"21 mag",nights:1,pin:{x:535,y:379},
+     hotel:{name:"Caesars Palace Las Vegas",addr:"3570 Las Vegas Boulevard",stars:5,pop:80,board:"Solo pernottamento",room:"Camera assegnata all'arrivo"},
+     weather:{hi:31,lo:18,note:"Caldo, sole pieno nel deserto del Mojave."},
+     blurb:"La capitale mondiale del divertimento nel deserto del Mojave. Tutta l'azione si concentra sulla Strip: le fontane del Bellagio, la Venezia ricostruita del Venetian, il Luxor a forma di piramide. Spettacoli gratuiti ovunque.",
+     pois:["The Strip di notte","Fontane del Bellagio","The Venetian & le gondole","Fremont Street Experience","High Roller (ruota panoramica)","The Mob Museum","Red Rock Canyon (fuori città)"],
+     toNext:{mode:"car",km:260,drive:"~2 h 45",note:"Via I-15 nord verso lo Utah."}},
+
+    {id:"s5",n:5,city:"Parco nazionale di Zion",region:"Utah",
+     inISO:"2027-05-21",outISO:"2027-05-22",in:"21 mag",out:"22 mag",nights:1,pin:{x:656,y:249},
+     hotel:{name:"Fairfield Inn & Suites by Marriott Virgin Zion NP",addr:"One Camino Del Rio, Virgin",stars:3,pop:91,board:"Solo pernottamento",room:"Camera"},
+     weather:{hi:29,lo:14,note:"Caldo nel canyon; acqua gelida se si entra nei Narrows."},
+     blurb:"Un corridoio di pareti di arenaria rossa a strapiombo scavato dal fiume Virgin. Sentieri per tutti: la facile Riverside Walk, l'esposta Angels Landing, e i Narrows dove si cammina nel fiume. Da marzo all'autunno è obbligatoria la navetta.",
+     pois:["Riverside Walk","The Narrows","Angels Landing","Pa'rus Trail","Observation Point","Canyon Overlook Trail"],
+     toNext:{mode:"car",km:120,drive:"~1 h 30",note:"Via Mt Carmel Highway (SR-9) e il tunnel storico."}},
+
+    {id:"s6",n:6,city:"Parco nazionale del Bryce Canyon",region:"Utah",
+     inISO:"2027-05-22",outISO:"2027-05-23",in:"22 mag",out:"23 mag",nights:1,pin:{x:717,y:191},
+     hotel:{name:"Best Western Plus Ruby's Inn",addr:"26 South Main Street, Bryce",stars:2,pop:78,board:"Con colazione",room:"Camera"},
+     weather:{hi:17,lo:1,note:"Quota 2.400–2.700 m: aria rarefatta e possibile gelo notturno anche a maggio."},
+     blurb:"Un anfiteatro naturale di hoodoo — pinnacoli di roccia rossa, arancione e rosa — visto dall'alto del bordo dell'altopiano. Dai punti panoramici (Sunrise, Sunset, Inspiration Point) si scende tra le guglie con il Navajo Loop o il Queen's Garden. Cielo buio certificato: Via Lattea garantita.",
+     pois:["Bryce Amphitheater","Sunrise & Sunset Point","Inspiration Point","Navajo Loop Trail","Queen's Garden","Programma astronomia dei ranger"],
+     toNext:{mode:"fly",km:null,drive:"volo, ~7 h con scalo",note:"Volo Delta del 23 mag: Cedar City (CDC) 09:31 → scalo a Salt Lake City → Canyonlands Field (CNY) 16:40. Classe Economy."}},
+
+    {id:"s7",n:7,city:"Moab",region:"Utah",
+     inISO:"2027-05-23",outISO:"2027-05-24",in:"23 mag",out:"24 mag",nights:1,pin:{x:876,y:77},
+     hotel:{name:"voco Moab by IHG",addr:"1421 S Hwy 191",stars:3,pop:92,board:"Solo pernottamento",room:"Standard Room"},
+     weather:{hi:29,lo:14,note:"Caldo e secco, tipico dell'alto deserto."},
+     blurb:"Base perfetta per due parchi straordinari: Arches, con la celebre Delicate Arch, e Canyonlands, con i suoi canyon a perdita d'occhio. Paradiso anche per mountain bike (Slickrock Trail) e fuoristrada.",
+     pois:["Arches NP — Delicate Arch","Canyonlands NP — Island in the Sky","Dead Horse Point","Colorado River Scenic Byway","Slickrock Trail"],
+     toNext:{mode:"car",km:240,drive:"~2 h 30",note:"Via US-191 e US-163 sud (Bluff, Mexican Hat)."}},
+
+    {id:"s8",n:8,city:"Monument Valley",region:"Utah / Arizona",
+     inISO:"2027-05-24",outISO:"2027-05-25",in:"24 mag",out:"25 mag",nights:1,pin:{x:837,y:270},
+     hotel:{name:"Goulding's Lodge",addr:"1000 Main Street",stars:3,pop:86,board:"Solo pernottamento",room:"Villa 1 camera con angolo cottura"},
+     weather:{hi:28,lo:12,note:"Forte escursione termica tra giorno e notte."},
+     blurb:"Il paesaggio più cinematografico del Sud-Ovest: buttes di arenaria che si ergono da un deserto rosso. Si entra dal Navajo Tribal Park e si percorre la Valley Drive, 27 km di sterrato tra le Mittens e Merrick Butte. I tour guidati Navajo raggiungono punti chiusi alle auto private.",
+     pois:["Navajo Tribal Park & Valley Drive","The Mittens & Merrick Butte","Tour guidato Navajo in 4x4","Forrest Gump Point (US-163)","Valley of the Gods","Goulding's Museum"],
+     toNext:{mode:"car",km:195,drive:"~2 h 15",note:"Via US-163 e US-98 verso Page."}},
+
+    {id:"s9",n:9,city:"Page",region:"Arizona",
+     inISO:"2027-05-25",outISO:"2027-05-26",in:"25 mag",out:"26 mag",nights:1,pin:{x:759,y:281},
+     hotel:{name:"Wingate by Wyndham Page Lake Powell",addr:"671 Scenic View Rd",stars:3,pop:85,board:"Con colazione",room:"1 King Bed non fumatori"},
+     weather:{hi:28,lo:13,note:"Caldo e spesso ventoso sul lago."},
+     blurb:"Cittadina vicino alla diga di Glen Canyon e al lago Powell. Attrazioni concentrate e spettacolari: il meandro di Horseshoe Bend e le luci dell'Antelope Canyon (visitabile solo con tour guidato).",
+     pois:["Horseshoe Bend","Lower Antelope Canyon (Ken's Tours)","Glen Canyon Dam Overlook","Lake Powell","Rainbow Bridge National Monument"],
+     toNext:{mode:"car",km:210,drive:"~2 h 30",note:"Via US-89 sud verso Cameron."}},
+
+    {id:"s10",n:10,city:"Grand Canyon",region:"Arizona",
+     inISO:"2027-05-26",outISO:"2027-05-27",in:"26 mag",out:"27 mag",nights:1,pin:{x:719,y:385},
+     hotel:{name:"Yavapai Lodge",addr:"11 Yavapai Lodge Road (South Rim)",stars:3,pop:83,board:"Solo pernottamento",room:"Camera 2 letti Queen"},
+     weather:{hi:21,lo:5,note:"South Rim a 2.100 m: fresco, forti sbalzi tra sole e ombra."},
+     blurb:"Uno dei paesaggi più iconici del pianeta: 446 km di canyon scavati dal Colorado, con pareti a strati che cambiano colore con la luce. La maggior parte resta sul South Rim, tra Grand Canyon Village, Mather Point e Desert View. Alba e tramonto ai punti panoramici sono il clou.",
+     pois:["Mather Point","Yavapai Point & Geology Museum","Desert View Watchtower","Rim Trail","Bright Angel Trail (discesa breve)","South Kaibab Trail"],
+     toNext:{mode:"car",km:185,drive:"~2 h 15",note:"Via AZ-64 sud e I-17 verso Sedona."}},
+
+    {id:"s11",n:11,city:"Sedona",region:"Arizona",
+     inISO:"2027-05-27",outISO:"2027-05-28",in:"27 mag",out:"28 mag",nights:1,pin:{x:742,y:531},
+     hotel:{name:"Aiden by Best Western Sedona",addr:"2545 W Highway 89a",stars:4,pop:86,board:"Solo pernottamento",room:"2 letti matrimoniali, piano alto, balcone, vista"},
+     weather:{hi:29,lo:13,note:"Mite: condizioni quasi ideali per camminare."},
+     blurb:"Formazioni di pietra rossa che si protendono verso l'alto, circondate da 1,8 milioni di acri di foresta nazionale. Sentieri e piste da jeep, oltre 40 gallerie d'arte, cantine nei dintorni e i famosi \"vortici\" energetici cari ai nativi americani.",
+     pois:["Cathedral Rock","Chapel of the Holy Cross","Bell Rock & vortici energetici","Oak Creek Canyon","Tour in jeep sulle piste rosse","Gallerie d'arte del centro"],
+     toNext:{mode:"car",km:530,drive:"~5 h 15",note:"Via I-17 e I-10 ovest: giornata di guida lunga."}},
+
+    {id:"s12",n:12,city:"Joshua Tree National Park",region:"California",
+     inISO:"2027-05-28",outISO:"2027-05-29",in:"28 mag",out:"29 mag",nights:1,pin:{x:482,y:630},
+     hotel:{name:"Holiday Inn Express & Suites Twentynine Palms (IHG)",addr:"72535 Twentynine Palms Hwy",stars:2,pop:86,board:"Con colazione",room:"1 King Standard"},
+     weather:{hi:33,lo:17,note:"Molto caldo di giorno; cieli bui e stellati di notte."},
+     blurb:"Dove si incontrano due deserti, il Mojave e il Colorado. Alberi di Joshua dai rami contorti, massi giganti da arrampicata e una rete fitta di sentieri. Di notte è uno dei posti migliori del Paese per osservare la Via Lattea.",
+     pois:["Hidden Valley Nature Trail","Ryan Mountain Trail","Cholla Cactus Garden","Keys View","Osservazione delle stelle"],
+     toNext:{mode:"car",km:210,drive:"~2 h 30",note:"Via I-10 ovest verso Los Angeles."}},
+
+    {id:"s13",n:13,city:"Los Angeles",region:"California",
+     inISO:"2027-05-29",outISO:"2027-05-31",in:"29 mag",out:"31 mag",nights:2,pin:{x:344,y:625},
+     hotel:{name:"Best Western Plus Sunset Plaza Hotel",addr:"8400 W Sunset Blvd",stars:3,pop:88,board:"Con colazione",room:"Standard 1 letto king, frigo e microonde"},
+     weather:{hi:23,lo:15,note:"Mite; \"May gray\": nuvole basse al mattino che si aprono nel pomeriggio."},
+     blurb:"La Città degli Angeli: cinema, spiagge e quartieri sparsi su un'area vastissima. Dall'insegna di Hollywood all'Osservatorio Griffith, da Venice Beach al Santa Monica Pier, fino allo shopping di Rodeo Drive. Ultimo respiro americano prima del volo.",
+     pois:["Hollywood Sign & Walk of Fame","Griffith Observatory","Santa Monica Pier","Venice Beach","Rodeo Drive & Beverly Hills","The Getty Center","Downtown & Grand Central Market","Universal Studios Hollywood"],
+     toNext:{mode:"end",km:null,drive:null,note:"Riconsegna auto a LAX alle 20:00, poi volo di rientro BA 268 delle 20:55."}}
+  ],
+  flights:[
+    {title:"Andata",date:"16 maggio 2027",meta:"16 h 30 · 1 scalo a Londra",
+     segs:[
+      {carrier:"British Airways · BA 599",from:"Venezia Tessera (VCE)",dep:"10:10",to:"Londra Heathrow (LHR)",arr:"11:35"},
+      {carrier:"British Airways · BA 287",from:"Londra Heathrow (LHR)",dep:"14:30",to:"San Francisco (SFO)",arr:"17:40"}
+     ]},
+    {title:"Volo interno",date:"23 maggio 2027",meta:"Economy · Delta Main Classic · ~7 h · scalo a Salt Lake City",
+     segs:[
+      {carrier:"Delta Air Lines · DL 4318",from:"Cedar City (CDC)",dep:"09:31",to:"Salt Lake City (SLC)",arr:"10:40"},
+      {carrier:"Delta Air Lines · DL 4333",from:"Salt Lake City (SLC)",dep:"15:40",to:"Canyonlands Field (CNY)",arr:"16:40"}
+     ]},
+    {title:"Ritorno",date:"31 maggio 2027",meta:"Economy · 16 h 20 · 1 scalo a Londra",
+     segs:[
+      {carrier:"British Airways · BA 268",from:"Los Angeles (LAX)",dep:"20:55",to:"Londra Heathrow (LHR)",arr:"15:25 (1 giu)"},
+      {carrier:"British Airways · BA 610",from:"Londra Heathrow (LHR)",dep:"19:05",to:"Venezia Tessera (VCE)",arr:"22:15 (1 giu)"}
+     ]}
+  ],
+  car:{model:"Nissan Rogue o similare — gruppo IFAR",trans:"Cambio automatico",supplier:"Thrifty",
+    pickup:"18 mag 2027, ore 10:00 — San Francisco, O'Farrell Street HLE",
+    dropoff:"31 mag 2027, ore 20:00 — Los Angeles Intl, 5251 West 98th Street"},
+  transfer:{desc:"Minivan privato (1–5 persone), classe Economia",
+    route:"San Francisco (SFO) → Hotel Caza Fisherman's Wharf",
+    info:"Pick-up all'orario di arrivo del volo (17:40), in attesa di conferma. Attesa massima 60 minuti."},
+  insurance:[
+    {code:"T006/2024 GT8",name:"Polizza Medico / Bagaglio / Annullamento (inclusa)",
+     detail:"Area Continentale (extra Europa) · 17 giorni",
+     url:"https://tr2storage.blob.core.windows.net/insurance-terms/Tessera+MBA_T006-2zUGLOgU04I4wSyvy8TfqZh0.pdf"},
+    {code:"T006/2024 9GT",name:"Integrativa fino a 1 milione (solo con MBA o MB)",
+     detail:"Area Continentale (extra Europa) · 17 giorni",
+     url:"https://tr2storage.blob.core.windows.net/insurance-terms/Tessera+SM+1M+con+Malattie+Pre_T006-3TmD1SuqJHtc5c54jExr85gM.pdf"}
+  ]
+};
+
+const CHECKLIST_DEFAULT = [
+  ["Documenti","Passaporto valido (6+ mesi oltre il rientro)"],
+  ["Documenti","Autorizzazione ESTA approvata"],
+  ["Documenti","Patente + Permesso Internazionale di Guida"],
+  ["Documenti","Voucher Listrop stampati (rif. 61964459)"],
+  ["Documenti","Carta di credito — avvisare la banca del viaggio"],
+  ["Documenti","Tessera assicurativa MBA"],
+  ["Documenti","Un po' di dollari in contanti"],
+  ["Auto & guida","Supporto per telefono in auto"],
+  ["Auto & guida","Cavo di ricarica da auto"],
+  ["Auto & guida","Mappe offline scaricate sul telefono"],
+  ["Auto & guida","Occhiali da sole"],
+  ["Auto & guida","Valutare il pass parchi \"America the Beautiful\""],
+  ["Abbigliamento","Vestizione a strati (caldo e fresco)"],
+  ["Abbigliamento","Giacca antivento / antipioggia"],
+  ["Abbigliamento","Scarpe da trekking comode"],
+  ["Abbigliamento","Sandali o ciabatte"],
+  ["Abbigliamento","Costume da bagno"],
+  ["Abbigliamento","Cappello con visiera"],
+  ["Abbigliamento","Pile per Bryce e Grand Canyon"],
+  ["Parchi & natura","Borraccia (2 litri a testa)"],
+  ["Parchi & natura","Crema solare SPF 50"],
+  ["Parchi & natura","Zaino da giornata"],
+  ["Parchi & natura","Torcia frontale (cieli bui a Monument Valley)"],
+  ["Parchi & natura","Barrette e snack"],
+  ["Parchi & natura","Kit primo soccorso"],
+  ["Elettronica","Adattatore prese USA (tipo A/B)"],
+  ["Elettronica","Power bank"],
+  ["Elettronica","Caricabatterie di telefoni e macchina fotografica"],
+  ["Elettronica","Macchina fotografica e schede di memoria"],
+  ["Elettronica","Cuffie"],
+  ["Salute","Farmaci personali (con ricetta)"],
+  ["Salute","Antidolorifico e antinfiammatorio"],
+  ["Salute","Cerotti e salviette"],
+  ["Salute","Gel disinfettante per le mani"],
+  ["Salute","Repellente per insetti"]
+].map((r,i)=>({id:"d"+i,group:r[0],label:r[1]}));
+
+/* =========================================================================
+   STORE  —  db capability con fallback locale
+   ========================================================================= */
+const LKEY="rottaSW:";
+const localSubs=[];
+function deepMerge(a,b){
+  const o={...a};
+  for(const k in b){
+    if(b[k]&&typeof b[k]==="object"&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==="object"&&!Array.isArray(a[k])) o[k]=deepMerge(a[k],b[k]);
+    else o[k]=b[k];
+  }
+  return o;
+}
+function localDoc(path){
+  const key=LKEY+path;
+  const read=()=>{try{const r=localStorage.getItem(key);return r?JSON.parse(r):null}catch(e){return null}};
+  const fire=()=>{try{localStorage.setItem(LKEY+"ping",String(Date.now()))}catch(e){}localSubs.filter(s=>s.path===path).forEach(s=>s.cb(snap()));};
+  const snap=()=>{const d=read();return{exists:d!=null,data:()=>d==null?undefined:d,metadata:{fromCache:true,hasPendingWrites:false}}};
+  return{
+    path,
+    async get(){return snap()},
+    async set(d){try{localStorage.setItem(key,JSON.stringify(d))}catch(e){}fire()},
+    async update(d){const c=read()||{};try{localStorage.setItem(key,JSON.stringify(deepMerge(c,d)))}catch(e){}fire()},
+    async delete(){try{localStorage.removeItem(key)}catch(e){}fire()},
+    onSnapshot(cb){localSubs.push({path,cb});cb(snap());
+      const h=e=>{if(e.key===key||e.key===LKEY+"ping")cb(snap())};
+      window.addEventListener("storage",h);
+      return()=>{window.removeEventListener("storage",h)};}
+  };
+}
+let STORE={kind:"local",doc:localDoc};
+async function initStore(){
+  try{
+    const db=await claude.use("db");
+    if(db){STORE={kind:"cloud",doc:p=>db.doc(p)};}
+  }catch(e){}
+  boot();
+}
+if(window.claude&&claude.use) initStore(); else boot();
+
+/* =========================================================================
+   APP
+   ========================================================================= */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const stars=n=>"★".repeat(n)+"☆".repeat(5-n);
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d;};
+const dISO=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);};
+const fmtEur=n=>"€ "+n.toLocaleString("it-IT");
+
+let state={packing:{done:{},custom:[]},notes:{},expenses:{items:[]}};
+let unsub=[];
+
+function boot(){
+  buildTimeline();
+  buildMap();
+  buildInfo();
+  renderOggi();
+  wireNav();
+  wireSheet();
+  wirePacking();
+  subscribe();
+  // restore last tab
+  const last=localStorage.getItem(LKEY+"tab");
+  if(last) go(last);
+}
+
+/* ---------- navigation ---------- */
+function wireNav(){
+  $$("#tabbar button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
+}
+function go(name){
+  $$("#tabbar button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.go===name)));
+  $$("main > section").forEach(s=>s.hidden=(s.dataset.tab!==name));
+  try{localStorage.setItem(LKEY+"tab",name)}catch(e){}
+  document.querySelector("main").scrollTo?.(0,0);
+  window.scrollTo(0,0);
+}
+
+/* ---------- context label ---------- */
+function tripDay(){
+  const t=today(), s=dISO(TRIP.meta.startISO), e=dISO(TRIP.meta.endISO);
+  if(t<s) return {phase:"before",days:Math.round((s-t)/864e5)};
+  if(t>e) return {phase:"after"};
+  const stop=TRIP.stops.find(x=>t>=dISO(x.inISO)&&t<dISO(x.outISO))||TRIP.stops[TRIP.stops.length-1];
+  return {phase:"during",stop,dayNo:Math.round((t-s)/864e5)+1};
+}
+function setCtx(){
+  const d=tripDay();
+  $("#ctx").textContent = d.phase==="before" ? "Partenza tra "+d.days+" g"
+    : d.phase==="during" ? "Giorno "+d.dayNo+" · "+d.stop.city
+    : "Viaggio concluso";
+}
+
+/* ---------- OGGI ---------- */
+function renderOggi(){
+  setCtx();
+  const d=tripDay();
+  const cc=$("#countCard");
+  if(d.phase==="before"){
+    cc.innerHTML=`<div class="num">${d.days}</div>
+      <div class="lbl">giorni alla partenza</div>
+      <div class="when">Si parte il 16 maggio 2027 da Venezia Tessera, volo BA 599 delle 10:10.</div>`;
+  }else if(d.phase==="during"){
+    const s=d.stop;
+    cc.innerHTML=`<div class="num">${d.dayNo}<span style="font-size:24px;color:var(--ink-faint)">/16</span></div>
+      <div class="lbl">Oggi sei a</div>
+      <div class="when" style="font-family:'Bricolage Grotesque';font-weight:700;font-size:20px;color:var(--ink);margin-top:4px">${esc(s.city)}</div>`;
+  }else{
+    cc.innerHTML=`<div class="num" style="color:var(--sage)">✓</div>
+      <div class="lbl">Bentornati! 16 giorni, 13 tappe, un continente attraversato.</div>`;
+  }
+
+  $("#tripStats").innerHTML=[
+    ["13","tappe"],["15","notti"],["≈3.000","km auto"],["4","persone"]
+  ].map(x=>`<div><div class="s-n">${x[0]}</div><div class="s-l">${x[1]}</div></div>`).join("");
+
+  // next / current stop card
+  const tn=$("#todayNext");
+  let target, head;
+  if(d.phase==="before"){ target=TRIP.stops[0]; head="Prima tappa"; }
+  else if(d.phase==="during"){
+    target=d.stop; head="Prossimo spostamento";
+  }else{ target=TRIP.stops[TRIP.stops.length-1]; head="Ultima tappa"; }
+
+  if(d.phase==="during"){
+    const nx=TRIP.stops[target.n]; // next stop object (n is 1-based)
+    tn.innerHTML=`<span class="eyebrow">${head}</span>
+      <div style="margin-top:8px">${legHTML(target.toNext,true)}</div>
+      ${nx?`<button class="btn ghost" style="margin-top:12px;width:100%" data-stop="${nx.id}">Apri ${esc(nx.city)}</button>`:""}
+      <div style="margin-top:14px" class="read">${esc(target.weather.note)}</div>`;
+  }else{
+    tn.innerHTML=`<span class="eyebrow">${head}</span>
+      <div class="city" style="font-family:'Bricolage Grotesque';font-weight:700;font-size:20px;margin-top:6px">${esc(target.city)}</div>
+      <div class="meta" style="color:var(--ink-soft);font-size:14px;margin-top:2px">${target.in} → ${target.out} · ${target.nights} nott${target.nights>1?"i":"e"}</div>
+      <div class="hotel" style="font-size:13px;color:var(--ink-faint);margin-top:6px">🛏 ${esc(target.hotel.name)}</div>
+      <button class="btn" style="margin-top:14px;width:100%" data-stop="${target.id}">Vedi i dettagli</button>`;
+  }
+  tn.querySelectorAll("[data-stop]").forEach(b=>b.addEventListener("click",()=>openStop(b.dataset.stop)));
+
+  // prep card
+  const pk=packingProgress();
+  $("#prepCard").innerHTML=`<span class="eyebrow">Preparativi</span>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:10px">
+      <div style="flex:1"><div class="progress"><i style="width:${pk.pct}%"></i></div></div>
+      <strong style="font-variant-numeric:tabular-nums">${pk.done}/${pk.total}</strong>
+    </div>
+    <button class="btn ghost" style="margin-top:12px;width:100%" data-go="valigia">Apri la valigia</button>`;
+  $("#prepCard [data-go]").addEventListener("click",()=>go("valigia"));
+}
+
+/* ---------- legs ---------- */
+function legHTML(leg,big){
+  if(!leg||leg.mode==="end") return `<div class="leg">🏁 ${esc(leg?leg.note:"")}</div>`;
+  if(leg.mode==="fly"){
+    return `<div class="leg fly" style="${big?'font-size:14px':''}">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 16l20-7-9 13-2-6-9-0Z" opacity=".9"/></svg>
+      <span>Volo interno · ${esc(leg.drive)}</span></div>
+      <div class="read" style="font-size:14px;margin-top:4px">${esc(leg.note)}</div>`;
+  }
+  return `<div class="leg" style="${big?'font-size:14px;color:var(--ink-soft)':''}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17h14M6 17l1.5-5h9L18 17M8 12l1-3h6l1 3"/><circle cx="8" cy="18" r="1.6" fill="currentColor"/><circle cx="16" cy="18" r="1.6" fill="currentColor"/></svg>
+    <span>${esc(leg.km)} km · ${esc(leg.drive)} in auto</span></div>
+    ${big?`<div class="read" style="font-size:14px;margin-top:4px">${esc(leg.note)}</div>`:""}`;
+}
+
+/* ---------- TIMELINE ---------- */
+function buildTimeline(){
+  const tl=$("#timeline"); tl.innerHTML="";
+  const live=tripDay();
+  TRIP.stops.forEach((s,i)=>{
+    const btn=el("button","stop-row");
+    btn.setAttribute("data-stop",s.id);
+    if(live.phase==="during"&&live.stop.id===s.id) btn.setAttribute("data-live","1");
+    btn.innerHTML=`<span class="dot">${s.n}</span>
+      <div class="city">${esc(s.city)}</div>
+      <div class="meta">${s.in} → ${s.out} · ${s.nights} nott${s.nights>1?"i":"e"} · <span style="color:var(--ink-faint)">${esc(s.region)}</span></div>
+      <div class="hotel">🛏 ${esc(s.hotel.name)} <span class="stars">${stars(s.hotel.stars)}</span></div>
+      <span class="chev"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>`;
+    btn.addEventListener("click",()=>openStop(s.id));
+    tl.appendChild(btn);
+    if(s.toNext){
+      const lg=el("div","leg"+(s.toNext.mode==="fly"?" fly":""));
+      if(s.toNext.mode==="end"){lg.innerHTML=`🏁 <span>${esc(s.toNext.note)}</span>`;}
+      else if(s.toNext.mode==="fly"){lg.innerHTML=`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 16l20-7-9 13-2-6-9-0Z"/></svg><span>Volo Cedar City → Moab · scalo a Salt Lake City</span>`;}
+      else{lg.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17h14M6 17l1.5-5h9L18 17"/><circle cx="8" cy="18" r="1.5" fill="currentColor"/><circle cx="16" cy="18" r="1.5" fill="currentColor"/></svg><span>${s.toNext.km} km · ${esc(s.toNext.drive)}</span>`;}
+      tl.appendChild(lg);
+    }
+  });
+}
+
+/* ---------- SHEET ---------- */
+function wireSheet(){
+  $$("#sheet [data-close]").forEach(b=>b.addEventListener("click",closeSheet));
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet();});
+}
+let lastFocus=null;
+function openStop(id){
+  const s=TRIP.stops.find(x=>x.id===id); if(!s)return;
+  lastFocus=document.activeElement;
+  const done=state.notes; // notes obj
+  const wants=state.packing; // reuse? no — pois stored in notes? keep separate
+  const poiState=state.pois||(state.pois={});
+  const b=$("#sheetBody");
+  b.innerHTML=`
+    <div class="sheet-hero">
+      <div class="n">TAPPA ${s.n} DI 13 · ${esc(s.region).toUpperCase()}</div>
+      <h3>${esc(s.city)}</h3>
+      <div class="dr">${s.in} → ${s.out} · ${s.nights} nott${s.nights>1?"i":"e"}</div>
+    </div>
+
+    <p class="read" style="margin:16px 0">${esc(s.blurb)}</p>
+
+    <div class="card" style="margin-bottom:16px">
+      <span class="eyebrow">Alloggio</span>
+      <div style="font-family:'Bricolage Grotesque';font-weight:600;font-size:17px;margin-top:6px">${esc(s.hotel.name)} <span class="stars">${stars(s.hotel.stars)}</span></div>
+      <div class="field"><span class="k">Indirizzo</span><span class="v">${esc(s.hotel.addr)}</span></div>
+      <div class="field"><span class="k">Trattamento</span><span class="v">${esc(s.hotel.board)}</span></div>
+      <div class="field"><span class="k">Camera</span><span class="v">${esc(s.hotel.room)}</span></div>
+      <div class="field" style="border-bottom:none"><span class="k">Gradimento ospiti</span><span class="v">${s.hotel.pop}%</span></div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <span class="eyebrow">Meteo atteso · maggio</span>
+      <div style="display:flex;align-items:baseline;gap:10px;margin-top:6px">
+        <strong style="font-family:'Bricolage Grotesque';font-size:24px">${s.weather.hi}°</strong>
+        <span style="color:var(--ink-faint)">/ ${s.weather.lo}° di notte</span>
+      </div>
+      <div class="read" style="font-size:14.5px;margin-top:4px">${esc(s.weather.note)}</div>
+    </div>
+
+    ${s.extra?`<div class="card" style="margin-bottom:16px;background:var(--sky-wash);border-color:transparent">
+      <span class="eyebrow">Da sapere</span><div class="read" style="font-size:14.5px;margin-top:6px;color:var(--ink)">${esc(s.extra)}</div></div>`:""}
+
+    <span class="eyebrow" style="display:block;margin:4px 0 2px">Cosa vedere — tocca per segnare</span>
+    <div id="poiList">${s.pois.map((p,i)=>{
+      const k=s.id+":"+i;
+      const on=!!poiState[k];
+      return `<button class="poi" aria-pressed="${on}" data-poi="${k}">
+        <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>
+        <span class="t">${esc(p)}</span></button>`;
+    }).join("")}</div>
+
+    <span class="eyebrow" style="display:block;margin:22px 0 6px">Note della tappa — condivise</span>
+    <textarea id="stopNote" placeholder="Prenotazioni, ristoranti, orari navette, idee…">${esc(state.notes[s.id]||"")}</textarea>
+
+    <div style="margin-top:22px">${s.toNext?legHTML(s.toNext,true):""}</div>
+  `;
+  b.querySelectorAll("[data-poi]").forEach(btn=>btn.addEventListener("click",()=>{
+    const k=btn.dataset.poi, on=btn.getAttribute("aria-pressed")==="true";
+    btn.setAttribute("aria-pressed",String(!on));
+    state.pois=state.pois||{}; if(on) delete state.pois[k]; else state.pois[k]=1;
+    saveNotes();
+  }));
+  const ta=b.querySelector("#stopNote");
+  let t;
+  ta.addEventListener("input",()=>{clearTimeout(t);t=setTimeout(()=>{state.notes[s.id]=ta.value;saveNotes();},500);});
+
+  const sh=$("#sheet");
+  sh.setAttribute("data-open","");
+  sh.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+  $(".panel",sh).scrollTo(0,0);
+  $("#sheet .sheet-top button").focus();
+}
+function closeSheet(){
+  const sh=$("#sheet");
+  if(!sh.hasAttribute("data-open"))return;
+  sh.removeAttribute("data-open");
+  sh.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+  lastFocus&&lastFocus.focus&&lastFocus.focus();
+}
+
+/* ---------- MAP ---------- */
+function buildMap(){
+  const S=TRIP.stops;
+  const pts=S.map(s=>`${s.pin.x},${s.pin.y}`);
+  // split solid vs flight leg (between stop 6 and 7 -> index 5..6)
+  const solidA=pts.slice(0,6).join(" ");
+  const flyLeg=`${S[5].pin.x},${S[5].pin.y} ${S[6].pin.x},${S[6].pin.y}`;
+  const solidB=pts.slice(6).join(" ");
+  const pins=S.map(s=>`
+    <g class="pin" data-stop="${s.id}" tabindex="0" role="button" aria-label="Tappa ${s.n}: ${esc(s.city)}">
+      <circle cx="${s.pin.x}" cy="${s.pin.y}" r="17" fill="var(--surface)" stroke="var(--sky)" stroke-width="2.5"/>
+      <text x="${s.pin.x}" y="${s.pin.y+5}" text-anchor="middle" font-family="Bricolage Grotesque,sans-serif" font-weight="700" font-size="15" fill="var(--sky-deep)">${s.n}</text>
+    </g>`).join("");
+  $("#map-wrap").innerHTML=`
+  <svg viewBox="0 0 1000 780" role="img" aria-label="Mappa del percorso attraverso California, Nevada, Utah e Arizona">
+    <rect width="1000" height="780" fill="var(--surface)"/>
+    <!-- confini di stato stilizzati -->
+    <g stroke="var(--line-strong)" stroke-width="2" stroke-dasharray="7 7" fill="none" opacity=".8">
+      <path d="M242 20 L568 515"/>
+      <path d="M603 20 L603 515"/>
+      <path d="M603 270 L1000 270"/>
+      <path d="M906 20 L906 560"/>
+    </g>
+    <g font-family="Figtree,sans-serif" font-size="20" font-weight="700" fill="var(--ink-faint)" opacity=".55" letter-spacing="2">
+      <text x="90" y="430">CALIFORNIA</text>
+      <text x="470" y="120">NEVADA</text>
+      <text x="720" y="90">UTAH</text>
+      <text x="720" y="330">ARIZONA</text>
+    </g>
+    <polyline points="${solidA}" fill="none" stroke="var(--sky)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="${flyLeg}" fill="none" stroke="var(--rust)" stroke-width="4" stroke-dasharray="3 10" stroke-linecap="round"/>
+    <polyline points="${solidB}" fill="none" stroke="var(--sky)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    ${pins}
+    <g transform="translate(940,720)" opacity=".6">
+      <circle r="16" fill="none" stroke="var(--ink-faint)" stroke-width="1.5"/>
+      <path d="M0 -13 L4 3 L0 -1 L-4 3 Z" fill="var(--ink-faint)"/>
+      <text y="-20" text-anchor="middle" font-family="Figtree" font-size="12" font-weight="700" fill="var(--ink-faint)">N</text>
+    </g>
+  </svg>`;
+  $$("#map-wrap .pin").forEach(g=>{
+    g.style.cursor="pointer";
+    g.addEventListener("click",()=>openStop(g.dataset.stop));
+    g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openStop(g.dataset.stop);}});
+  });
+}
+
+/* ---------- INFO ---------- */
+function buildInfo(){
+  const m=TRIP.meta;
+  const acc=(title,body,open)=>`<details class="acc"${open?" open":""}><summary>${title}<span class="mk">＋</span></summary><div class="acc-body">${body}</div></details>`;
+
+  const flights=TRIP.flights.map(f=>`
+    <div style="margin-bottom:14px">
+      <div style="font-family:'Bricolage Grotesque';font-weight:700;font-size:15px">${esc(f.title)} · <span style="color:var(--ink-faint)">${esc(f.date)}</span></div>
+      <div style="font-size:12.5px;color:var(--ink-faint);margin-bottom:4px">${esc(f.meta)}</div>
+      ${f.segs.map(g=>`<div class="flt">
+        <div class="carrier">${esc(g.carrier)}</div>
+        <div class="rowf"><span>${esc(g.dep)} ${esc(g.from)}</span></div>
+        <div class="rowf"><span>${esc(g.arr)} ${esc(g.to)}</span></div>
+      </div>`).join("")}
+    </div>`).join("");
+
+  const car=`
+    <div class="kv"><span class="kk">Veicolo</span><span class="vv">${esc(TRIP.car.model)}</span></div>
+    <div class="kv"><span class="kk">Cambio</span><span class="vv">${esc(TRIP.car.trans)}</span></div>
+    <div class="kv"><span class="kk">Fornitore</span><span class="vv">${esc(TRIP.car.supplier)}</span></div>
+    <div class="kv"><span class="kk">Ritiro</span><span class="vv">${esc(TRIP.car.pickup)}</span></div>
+    <div class="kv"><span class="kk">Riconsegna</span><span class="vv">${esc(TRIP.car.dropoff)}</span></div>
+    <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">
+      <div class="eyebrow">Transfer d'arrivo</div>
+      <div style="font-size:14px;margin-top:4px">${esc(TRIP.transfer.desc)}<br>${esc(TRIP.transfer.route)}</div>
+      <div class="read" style="font-size:13.5px;margin-top:4px">${esc(TRIP.transfer.info)}</div>
+    </div>`;
+
+  const meteo=`<div style="display:grid;grid-template-columns:1fr auto auto;gap:2px 12px;font-size:13.5px">
+    <div class="eyebrow">Tappa</div><div class="eyebrow" style="text-align:right">Giorno</div><div class="eyebrow" style="text-align:right">Notte</div>
+    ${TRIP.stops.map(s=>`<div style="padding:6px 0;border-top:1px solid var(--line)">${esc(s.city)}</div>
+      <div style="padding:6px 0;border-top:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums">${s.weather.hi}°</div>
+      <div style="padding:6px 0;border-top:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-faint)">${s.weather.lo}°</div>`).join("")}
+  </div><p class="note-line" style="text-align:left">Medie stagionali indicative per la seconda metà di maggio. In quota (Bryce, Grand Canyon) le notti possono avvicinarsi allo zero.</p>`;
+
+  const docs=`
+    <div class="kv"><span class="kk">Codice pratica</span><span class="vv">${esc(m.ref)}</span></div>
+    <div class="kv"><span class="kk">Viaggiatori</span><span class="vv">${esc(m.pax)}</span></div>
+    <div class="kv"><span class="kk">Date</span><span class="vv">${esc(m.dates)}</span></div>
+    <div style="margin:14px 0 6px" class="eyebrow">Assicurazioni</div>
+    ${TRIP.insurance.map(x=>`<div style="padding:8px 0;border-top:1px solid var(--line)">
+      <div style="font-weight:700;font-size:14px">${esc(x.code)}</div>
+      <div style="font-size:13.5px;color:var(--ink-soft)">${esc(x.name)}</div>
+      <div style="font-size:12.5px;color:var(--ink-faint)">${esc(x.detail)}</div>
+      <a href="${x.url}" target="_blank" rel="noopener" class="tag-src" style="font-size:13px">Apri le condizioni (PDF) ↗</a>
+    </div>`).join("")}
+    <div style="margin:16px 0 6px" class="eyebrow">Operatore & emergenze</div>
+    <div class="kv"><span class="kk">${esc(m.operator)}</span><span class="vv" style="font-weight:400;font-size:13px">${esc(m.addr)}</span></div>
+    <div class="kv"><span class="kk">Telefono</span><span class="vv"><a href="tel:${m.tel.replace(/\s/g,"")}">${esc(m.tel)}</a></span></div>
+    <div class="kv"><span class="kk">Emergenze 24h</span><span class="vv"><a href="tel:${m.emergency.replace(/\s/g,"")}">${esc(m.emergency)}</a></span></div>
+    <div class="kv"><span class="kk">WhatsApp</span><span class="vv"><a href="https://wa.me/${m.whatsapp.replace(/[^0-9]/g,"")}" target="_blank" rel="noopener">${esc(m.whatsapp)}</a></span></div>
+    <div class="kv"><span class="kk">E-mail</span><span class="vv"><a href="mailto:${m.email}">${esc(m.email)}</a></span></div>`;
+
+  $("#infoAcc").innerHTML=
+    acc("Voli",flights,true)+
+    acc("Noleggio auto & transfer",car)+
+    acc("Budget & spese",budgetHTML())+
+    acc("Meteo per tappa",meteo)+
+    acc("Documenti & contatti",docs)+
+    `<p class="note-line">Dati dal piano Listrop rif. ${esc(m.ref)}, creato il ${esc(m.created)}. App non ufficiale, a uso dei viaggiatori.</p>`;
+
+  wireBudget();
+}
+
+function budgetHTML(){
+  const m=TRIP.meta;
+  return `
+    <div class="budget-big">${fmtEur(m.priceTotal)}</div>
+    <div style="color:var(--ink-soft);font-size:14px;margin-bottom:2px">totale pacchetto · ${fmtEur(m.pricePer)} a persona (4 adulti)</div>
+    <p class="note-line" style="text-align:left;margin-top:6px">Voli, hotel, noleggio auto, transfer e assicurazione inclusi nel pacchetto. Sotto puoi tenere il conto delle spese di viaggio (benzina, ingressi parchi, ristoranti…).</p>
+    <div style="margin-top:12px" class="eyebrow">Spese condivise del gruppo</div>
+    <div class="exp-form">
+      <input id="expWho" placeholder="Chi paga" aria-label="Chi paga" list="expPeople">
+      <input id="expAmt" type="number" inputmode="decimal" placeholder="€" aria-label="Importo in euro">
+      <input id="expLab" placeholder="Per cosa" aria-label="Descrizione spesa" style="grid-column:1/-1">
+      <button class="btn" id="expAdd">Aggiungi spesa</button>
+    </div>
+    <datalist id="expPeople"></datalist>
+    <div id="expList"></div>
+    <div id="expTotals" style="margin-top:12px"></div>`;
+}
+function wireBudget(){
+  const add=$("#expAdd"); if(!add)return;
+  add.addEventListener("click",()=>{
+    const who=$("#expWho").value.trim()||"—";
+    const amt=parseFloat(($("#expAmt").value||"").replace(",","."));
+    const lab=$("#expLab").value.trim()||"Spesa";
+    if(!amt||amt<=0){$("#expAmt").focus();return;}
+    state.expenses.items.push({id:"e"+Date.now(),who,label:lab,amount:Math.round(amt*100)/100,ts:Date.now()});
+    $("#expAmt").value="";$("#expLab").value="";
+    saveExpenses(); renderExpenses();
+  });
+  renderExpenses();
+}
+function renderExpenses(){
+  const wrap=$("#expList"); if(!wrap)return;
+  const items=[...state.expenses.items].sort((a,b)=>b.ts-a.ts);
+  const people=[...new Set(state.expenses.items.map(i=>i.who))].filter(p=>p&&p!=="—");
+  const dl=$("#expPeople"); if(dl) dl.innerHTML=people.map(p=>`<option value="${esc(p)}">`).join("");
+  wrap.innerHTML=items.length?items.map(i=>`<div class="exp-row">
+      <span class="who">${esc(i.who)}</span>
+      <span class="lab">${esc(i.label)}</span>
+      <span class="amt">${fmtEur(i.amount)}</span>
+      <button class="del" data-del="${i.id}" aria-label="Elimina">✕</button>
+    </div>`).join(""):`<p class="note-line" style="text-align:left">Ancora nessuna spesa registrata.</p>`;
+  wrap.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>{
+    state.expenses.items=state.expenses.items.filter(x=>x.id!==b.dataset.del);
+    saveExpenses();renderExpenses();
+  }));
+  const tot=state.expenses.items.reduce((s,i)=>s+i.amount,0);
+  const n=Math.max(people.length,1);
+  const share=tot/n;
+  const bal=people.map(p=>{
+    const paid=state.expenses.items.filter(i=>i.who===p).reduce((s,i)=>s+i.amount,0);
+    return {p,paid,d:paid-share};
+  });
+  $("#expTotals").innerHTML=tot?`
+    <div class="kv"><span class="kk">Totale speso</span><span class="vv">${fmtEur(Math.round(tot))}</span></div>
+    <div class="kv"><span class="kk">Quota a testa (÷ ${n})</span><span class="vv">${fmtEur(Math.round(share))}</span></div>
+    <div style="margin-top:8px" class="eyebrow">Conguaglio</div>
+    ${bal.map(b=>`<div class="bal"><span>${esc(b.p)}</span><span class="${b.d>=0?'pos':'neg'}">${b.d>=0?"+":""}${fmtEur(Math.round(b.d))}</span></div>`).join("")}
+    <p class="note-line" style="text-align:left">Verde = ha anticipato, deve ricevere. Rosso = deve dare.</p>`:"";
+}
+
+/* ---------- PACKING ---------- */
+function allPackItems(){ return [...CHECKLIST_DEFAULT, ...(state.packing.custom||[])]; }
+function packingProgress(){
+  const it=allPackItems(), done=it.filter(x=>state.packing.done[x.id]).length;
+  return {done,total:it.length,pct:it.length?Math.round(done/it.length*100):0};
+}
+function wirePacking(){
+  $("#pkAdd").addEventListener("click",addPackItem);
+  $("#pkNew").addEventListener("keydown",e=>{if(e.key==="Enter")addPackItem();});
+  renderPacking();
+}
+function addPackItem(){
+  const v=$("#pkNew").value.trim(); if(!v)return;
+  state.packing.custom=state.packing.custom||[];
+  state.packing.custom.push({id:"c"+Date.now(),group:"Aggiunti da noi",label:v});
+  $("#pkNew").value="";
+  savePacking(); renderPacking();
+}
+function renderPacking(){
+  const wrap=$("#checklist"); if(!wrap)return;
+  const items=allPackItems();
+  const groups=[...new Set(items.map(i=>i.group))];
+  wrap.innerHTML=groups.map(g=>{
+    const gi=items.filter(i=>i.group===g);
+    const gd=gi.filter(i=>state.packing.done[i.id]).length;
+    return `<div class="grp-h">${esc(g)}<span class="c">${gd}/${gi.length}</span></div>
+      ${gi.map(i=>`<button class="poi" aria-pressed="${!!state.packing.done[i.id]}" data-pk="${i.id}">
+        <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>
+        <span class="t">${esc(i.label)}</span>
+        ${i.group==="Aggiunti da noi"?`<span class="del" data-rm="${i.id}" role="button" aria-label="Rimuovi">✕</span>`:""}
+      </button>`).join("")}`;
+  }).join("");
+  wrap.querySelectorAll("[data-pk]").forEach(b=>b.addEventListener("click",e=>{
+    if(e.target.closest("[data-rm]"))return;
+    const id=b.dataset.pk, on=!!state.packing.done[id];
+    if(on) delete state.packing.done[id]; else state.packing.done[id]=1;
+    savePacking(); renderPacking();
+  }));
+  wrap.querySelectorAll("[data-rm]").forEach(b=>b.addEventListener("click",e=>{
+    e.stopPropagation();
+    state.packing.custom=state.packing.custom.filter(x=>x.id!==b.dataset.rm);
+    delete state.packing.done[b.dataset.rm];
+    savePacking(); renderPacking();
+  }));
+  const p=packingProgress();
+  $("#pkBar").style.width=p.pct+"%";
+  $("#pkPct").textContent=p.pct;
+  $("#pkCount").textContent=p.done+" di "+p.total;
+  $("#prepCard")&&renderOggi();
+}
+
+/* ---------- persistence ---------- */
+let saveT={};
+function debouncedSave(key,path,payload){
+  clearTimeout(saveT[key]);
+  saveT[key]=setTimeout(()=>{STORE.doc(path).set(payload).catch(()=>{});},250);
+}
+function savePacking(){debouncedSave("pk","trip/packing",{done:state.packing.done,custom:state.packing.custom});}
+function saveNotes(){debouncedSave("nt","trip/notes",{notes:state.notes,pois:state.pois||{}});}
+function saveExpenses(){debouncedSave("ex","trip/expenses",{items:state.expenses.items});}
+
+function subscribe(){
+  unsub.forEach(u=>{try{u()}catch(e){}}); unsub=[];
+  unsub.push(STORE.doc("trip/packing").onSnapshot(snap=>{
+    const d=snap.exists&&snap.data(); if(!d)return;
+    state.packing.done=d.done||{}; state.packing.custom=d.custom||[];
+    renderPacking();
+  },()=>{}));
+  unsub.push(STORE.doc("trip/notes").onSnapshot(snap=>{
+    const d=snap.exists&&snap.data(); if(!d)return;
+    state.notes=d.notes||{}; state.pois=d.pois||{};
+    const ta=$("#stopNote"); // if a sheet is open, refresh only if not focused
+    if(ta&&document.activeElement!==ta){
+      const open=$("#sheet[data-open]");
+      // leave as-is; user reopens to see updates
+    }
+  },()=>{}));
+  unsub.push(STORE.doc("trip/expenses").onSnapshot(snap=>{
+    const d=snap.exists&&snap.data(); if(!d)return;
+    state.expenses.items=d.items||[];
+    renderExpenses();
+  },()=>{}));
+  $("#pkMode").textContent = STORE.kind==="cloud"
+    ? "Lista sincronizzata: le modifiche arrivano a tutti i viaggiatori."
+    : "Salvataggio su questo dispositivo. Online la lista si sincronizza tra tutti.";
+}
+
+if("serviceWorker" in navigator){
+  addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>

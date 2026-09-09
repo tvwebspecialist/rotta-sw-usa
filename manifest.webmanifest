@@ -1,0 +1,16 @@
+{
+  "name": "Rotta Sud-Ovest USA",
+  "short_name": "Rotta SW USA",
+  "description": "Compagno di viaggio per il tour on-the-road Venezia–San Francisco–canyon–Los Angeles, maggio 2027.",
+  "lang": "it",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ece9e2",
+  "theme_color": "#ece9e2",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
